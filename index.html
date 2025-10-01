@@ -304,7 +304,7 @@
                         </div>
                     </div>
 
-                    <form class="contact-form">
+                    <form action="https://formspree.io/f/mzzjgpgw" class="contact-form" method="POST">
                         <div class="form-group">
                             <label for="name">Nom complet</label>
                             <input type="text" id="name" name="name" required>
@@ -323,6 +323,18 @@
                         <div class="form-group">
                             <label for="message">Message</label>
                             <textarea id="message" name="message" required></textarea>
+                        </div>
+
+
+                        <!-- Message de confirmation -->
+                        <div class="thank-you" style="display:none">
+                            <h3>Merci pour votre message !</h3>
+                            <p>Je vous répondrai dès que possible.</p>
+                        </div>
+
+                        <!-- Honeypot anti-spam (invisible aux humains) -->
+                        <div style="display: none;">
+                        <input type="text" name="_gotcha" />
                         </div>
 
                         <button type="submit" class="cta-button">Envoyer le message</button>
@@ -355,3 +367,26 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+<script>
+  document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch(this.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(response => {
+      if (response.ok) {
+        this.reset();
+        document.querySelector('.thank-you').style.display = 'block';
+        setTimeout(() => {
+          document.querySelector('.thank-you').style.display = 'none';
+        }, 5000);
+      } else {
+        alert("Erreur lors de l'envoi. Veuillez réessayer.");
+      }
+    });
+  });
+</script>
